@@ -1,0 +1,60 @@
+/* Estilos del Footer */
+footer {
+    background: #333;
+    color: #fff;
+    padding: 2rem 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+}
+
+.footer-col {
+    margin: 1rem;
+    min-width: 200px;
+}
+
+.footer-col .logo {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: #FFA90A;
+}
+
+.footer-col p {
+    margin-bottom: 0.5rem;
+    color: #ccc;
+}
+
+.footer-col ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-col ul li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-col ul li a {
+    color: #ccc;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-col ul li a:hover {
+    color: #FFA90A;
+}
+
+@media (max-width: 768px) {
+    footer {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .footer-col {
+        margin: 0.5rem;
+        min-width: auto;
+    }
+}
