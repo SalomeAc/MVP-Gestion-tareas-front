@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./recover.css";
+import "./RecoverPassword.css";
 
 const RecoverPassword = () => {
 

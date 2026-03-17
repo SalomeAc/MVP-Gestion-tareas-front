@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getUserProfile, deleteUserProfile } from "../services/userServices";
 import { useNavigate } from "react-router-dom";
-import "./user-profile.css";
+import "./Profile.css";
 
 const UserProfile = () => {
   const [user, setUser] = useState(null);

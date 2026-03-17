@@ -3,7 +3,7 @@ import {
   updateUserProfile,
   getUserProfile
 } from "../services/userServices";
-import "./edit-profile.css";
+import "./EditProfile.css";
 
 const EditProfile = () => {
 

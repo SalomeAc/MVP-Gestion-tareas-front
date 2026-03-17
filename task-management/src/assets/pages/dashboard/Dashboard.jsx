@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import {
   getUserLists,
   deleteList
-} from "../services/listService";
+} from "../services/listServices";
 import {
   getTasks,
   deleteTask
 } from "../services/taskService";
-import "./dashboard.css";
+import "./Dashboard.css";
 
 const Dashboard = () => {
   const [lists, setLists] = useState([]);

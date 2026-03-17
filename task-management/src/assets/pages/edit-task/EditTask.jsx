@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { updateTask, getTasks } from "../services/taskService";
-import "./edit-task.css";
+import "./EditTask.css";
 
 const EditTask = () => {
 

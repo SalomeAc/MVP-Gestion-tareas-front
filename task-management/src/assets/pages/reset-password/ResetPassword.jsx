@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import "./reset.css";
+import "./ResetPassword.css";
 
 const ResetPassword = () => {
   const navigate = useNavigate();

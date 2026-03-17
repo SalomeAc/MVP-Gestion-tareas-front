@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { createTask, getTasks } from "../services/taskService";
-import "./create-task.css";
+import "./CreateTask.css";
 
 const CreateTask = () => {
   const [title, setTitle] = useState("");

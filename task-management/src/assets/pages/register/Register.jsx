@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { registerUser } from "../services/userServices";
 import { useNavigate } from "react-router-dom";
-import "./register.css";
+import "./Register.css";
 
 const Register = () => {
   const navigate = useNavigate();

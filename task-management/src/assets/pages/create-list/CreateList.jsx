@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { createList } from "../services/listService";
-import "./create-list.css";
+import { createList } from "../services/listServices";
+import "./CreateList.css";
 
 const CreateList = () => {
   const [title, setTitle] = useState("");
