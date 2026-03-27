@@ -60,7 +60,7 @@ const EditTask = () => {
         description: task.description || "",
         date,
         time,
-        status: task.status || "unassigned"
+        status: task.status || "por hacer"
       });
 
       setLoading(false);
