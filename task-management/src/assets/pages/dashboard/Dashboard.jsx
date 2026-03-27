@@ -5,7 +5,8 @@ import {
 } from "../services/listServices";
 import {
   getTasks,
-  deleteTask
+  deleteTask,
+  updateTask
 } from "../services/taskService";
 import "./Dashboard.css";
 
@@ -13,8 +14,13 @@ const Dashboard = () => {
   const [lists, setLists] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [currentList, setCurrentList] = useState(null);
+  const totalTasks = tasks.length;
+  const completedTasks = tasks.filter(t => t.status === "done").length;
+  const progressPercent = totalTasks > 0
+    ? Math.round((completedTasks / totalTasks) * 100)
+    : 0;
 
-  // 🔐 cargar todo al inicio
+  //cargar todo al inicio
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
@@ -25,7 +31,7 @@ const Dashboard = () => {
     loadLists(token);
   }, []);
 
-  // 📦 cargar listas
+  // cargar listas
   const loadLists = async (token) => {
     try {
       const data = await getUserLists(token);
@@ -39,7 +45,7 @@ const Dashboard = () => {
     }
   };
 
-  // 📦 seleccionar lista
+  // seleccionar lista
   const selectList = async (list) => {
     const token = localStorage.getItem("token");
 
@@ -53,7 +59,7 @@ const Dashboard = () => {
     }
   };
 
-  // ❌ eliminar lista
+  // eliminar lista
   const handleDeleteList = async (id) => {
     const token = localStorage.getItem("token");
 
@@ -67,7 +73,7 @@ const Dashboard = () => {
     }
   };
 
-  // ❌ eliminar tarea
+  // eliminar tarea
   const handleDeleteTask = async (id) => {
     const token = localStorage.getItem("token");
 
@@ -80,6 +86,17 @@ const Dashboard = () => {
       console.error(err);
     }
   };
+
+  const handleStatusChange = async (taskId, newStatus) => {
+    const token = localStorage.getItem("token");
+
+    try {
+      await updateTask(token, taskId, { status: newStatus });
+      setTasks(tasks.map(t => t._id === taskId ? { ...t, status: newStatus } : t));
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
   return (
     <div className="app">
@@ -116,6 +133,12 @@ const Dashboard = () => {
           {currentList ? currentList.title : "Selecciona una lista"}
         </h1>
 
+        {currentList && (
+          <p>
+            Progreso: {completedTasks}/{totalTasks} tareas completadas ({progressPercent}%)
+          </p>
+        )}
+
         <button
           onClick={() => {
             if (!currentList) {
@@ -137,6 +160,17 @@ const Dashboard = () => {
 
                 <h3>{task.title}</h3>
                 <p>{task.description}</p>
+                <label>
+                  Estado:
+                  <select
+                    value={task.status}
+                    onChange={(e) => handleStatusChange(task._id, e.target.value)}
+                  >
+                    <option value="unassigned">Por hacer</option>
+                    <option value="ongoing">Haciendo</option>
+                    <option value="done">Completada</option>
+                  </select>
+                </label>
 
                 <button onClick={() => handleDeleteTask(task._id)}>
                   🗑️
