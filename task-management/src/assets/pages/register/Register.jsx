@@ -74,7 +74,6 @@ const Register = () => {
     return null;
   };
 
-  // 🚀 submit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -106,7 +105,16 @@ const Register = () => {
   };
 
   return (
-    <div className="register-layout">
+    <div className="register-screen">
+
+      <button
+        type="button"
+        className="register-back-btn"
+        onClick={() => navigate("/")}
+        aria-label="Volver"
+      >
+        ↩ 
+      </button>
 
       {loading && (
         <div className="spinner-overlay">
@@ -114,26 +122,37 @@ const Register = () => {
         </div>
       )}
 
-      <section className="card register-card">
+      <section className="register-mobile-card">
 
-        <h2>Crea una cuenta</h2>
-
-        {message && (
-          <div style={{ color: error ? "red" : "green" }}>
-            {message}
+        <div className="register-header">
+          <div className="register-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15 8C15 10.2091 13.2091 12 11 12C8.79086 12 7 10.2091 7 8C7 5.79086 8.79086 4 11 4C13.2091 4 15 5.79086 15 8Z" stroke="currentColor" strokeWidth="2" />
+              <path d="M4 20C4 16.6863 6.68629 14 10 14H12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <path d="M19 10V16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <path d="M16 13H22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            </svg>
           </div>
-        )}
+          <h2>Crea una cuenta</h2>
+          <p>Regístrate para comenzar</p>
+        </div>
 
-        <form onSubmit={handleSubmit}>
+        {message && <div className={`register-message ${error ? "is-error" : "is-success"}`}>{message}</div>}
 
-          <input name="firstName" placeholder="Nombre" onChange={handleChange} />
-          <input name="lastName" placeholder="Apellido" onChange={handleChange} />
-          <input name="age" type="number" placeholder="Edad" onChange={handleChange} />
-          <input name="email" type="email" placeholder="Correo" onChange={handleChange} />
-          <input name="password" type="password" placeholder="Contraseña" onChange={handleChange} />
-          <input name="confirmPassword" type="password" placeholder="Confirmar contraseña" onChange={handleChange} />
+        <form onSubmit={handleSubmit} className="register-form">
 
-          <button type="submit">Registrarse</button>
+          <input className="register-input" name="email" type="email" placeholder="Email" value={form.email} onChange={handleChange} />
+
+          <div className="register-grid-2">
+            <input className="register-input" name="firstName" placeholder="Nombre" value={form.firstName} onChange={handleChange} />
+            <input className="register-input" name="lastName" placeholder="Apellido" value={form.lastName} onChange={handleChange} />
+          </div>
+
+          <input className="register-input" name="age" type="number" placeholder="Edad" value={form.age} onChange={handleChange} />
+          <input className="register-input" name="password" type="password" placeholder="Contraseña" value={form.password} onChange={handleChange} />
+          <input className="register-input" name="confirmPassword" type="password" placeholder="Confirmar contraseña" value={form.confirmPassword} onChange={handleChange} />
+
+          <button className="register-submit-btn" type="submit">Register</button>
 
         </form>
 

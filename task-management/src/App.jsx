@@ -14,6 +14,7 @@ import Register from "./assets/pages/register/Register";
 import ResetPassword from "./assets/pages/reset-password/ResetPassword";
 import Security from "./assets/pages/security/security";
 import UserProfile from "./assets/pages/user-profile/Profile";
+import LandingPage from "./assets/pages/landing/LandingPage";
 
 function withLayout(component) {
   return <Layout>{component}</Layout>;
@@ -23,13 +24,13 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/recover-password" element={<RecoverPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/logout" element={<Logout />} />
 
-        <Route path="/" element={withLayout(<Dashboard />)} />
         <Route path="/dashboard" element={withLayout(<Dashboard />)} />
         <Route path="/user-profile" element={withLayout(<UserProfile />)} />
         <Route path="/edit-profile" element={withLayout(<EditProfile />)} />
@@ -40,7 +41,7 @@ function App() {
         <Route path="/about" element={withLayout(<About />)} />
         <Route path="/contact" element={withLayout(<Contact />)} />
 
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
