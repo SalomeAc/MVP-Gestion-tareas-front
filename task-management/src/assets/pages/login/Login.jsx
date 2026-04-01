@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../services/userServices";
 import "./Login.css";
 
@@ -52,30 +52,43 @@ const Login = () => {
 	};
 
 	return (
-		<section className="card" style={{ maxWidth: 420, margin: "3rem auto" }}>
-			<h2>Iniciar sesión</h2>
-			<form onSubmit={handleSubmit}>
-				<div className="row" style={{ marginBottom: "1rem" }}>
-					<label htmlFor="email">Correo</label>
+		<div className="mobile-wrapper">
+			<section className="mobile-card card">
+				<div className="login-header">
+					<div className="login-icon" aria-hidden="true">
+						<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+							<path d="M9 16L13 12L9 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+							<path d="M13 12H3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+							<path d="M14 4H19C20.1 4 21 4.9 21 6V18C21 19.1 20.1 20 19 20H14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+						</svg>
+					</div>
+					<h2>Bienvenido</h2>
+					<p>Ingresa a tu cuenta</p>
+				</div>
+
+				<form onSubmit={handleSubmit} className="login-form">
+				<div className="row login-row">
 					<input
 						id="email"
 						name="email"
 						type="email"
+						placeholder="Email"
 						value={form.email}
 						onChange={handleChange}
 						autoComplete="email"
+						className="login-input"
 					/>
 				</div>
 
-				<div className="row" style={{ marginBottom: "1rem" }}>
-					<label htmlFor="password">Contraseña</label>
+				<div className="row login-row">
 					<input
 						id="password"
 						name="password"
 						type="password"
+						placeholder="Contraseña"
 						value={form.password}
 						onChange={handleChange}
-						autoComplete="current-password"
+						className="login-input"
 					/>
 				</div>
 
@@ -85,11 +98,20 @@ const Login = () => {
 					</p>
 				)}
 
-				<button type="submit" disabled={loading}>
+				<button className="login-submit-btn" type="submit" disabled={loading}>
 					{loading ? "Ingresando..." : "Ingresar"}
 				</button>
-			</form>
-		</section>
+
+				<div className="login-forgot-row">
+					<Link to="/recover-password" className="login-forgot-link">
+						¿Olvidaste tu contraseña?
+					</Link>
+					
+				</div>
+
+				</form>
+			</section>
+		</div>
 	);
 };
 
