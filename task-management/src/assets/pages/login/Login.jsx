@@ -53,6 +53,15 @@ const Login = () => {
 
 	return (
 		<div className="mobile-wrapper">
+			<button
+				type="button"
+				className="login-back-btn"
+				onClick={() => navigate("/")}
+				aria-label="Volver al inicio"
+			>
+				↩
+			</button>
+
 			<section className="mobile-card card">
 				<div className="login-header">
 					<div className="login-icon" aria-hidden="true">
@@ -106,7 +115,13 @@ const Login = () => {
 					<Link to="/recover-password" className="login-forgot-link">
 						¿Olvidaste tu contraseña?
 					</Link>
-					
+				</div>
+
+				<div className="login-register-row">
+					<span>¿No tienes una cuenta? </span>
+					<Link to="/register" className="login-register-link">
+						Regístrate
+					</Link>
 				</div>
 
 				</form>

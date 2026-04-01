@@ -6,6 +6,43 @@
 	padding: 24px 16px;
 }
 
+.login-back-btn {
+	position: fixed;
+	top: 6px;
+	left: 6px;
+	z-index: 1200;
+	width: auto !important;
+	height: auto;
+	margin: 0 !important;
+	padding: 0 !important;
+	border: none;
+	background: transparent;
+	font-size: 28px;
+	line-height: 1;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	color: #2b2238;
+	cursor: pointer;
+}
+
+.login-back-btn:hover {
+	color: #1f1f1f !important;
+	background: transparent !important;
+	background-color: transparent !important;
+	box-shadow: none !important;
+	transform: none !important;
+}
+
+.login-back-btn:focus,
+.login-back-btn:focus-visible,
+.login-back-btn:active {
+	background: transparent !important;
+	background-color: transparent !important;
+	box-shadow: none !important;
+	outline: none;
+}
+
 .mobile-card {
 	width: 100%;
 	max-width: 420px;
@@ -117,5 +154,21 @@
 }
 
 .login-forgot-link:hover {
+	color: #2b2238;
+}
+
+.login-register-row {
+	font-size: 14px;
+	color: #707070;
+	text-align: center;
+}
+
+.login-register-link {
+	color: #3a2f4d;
+	font-weight: 600;
+	text-decoration: underline;
+}
+
+.login-register-link:hover {
 	color: #2b2238;
 }
