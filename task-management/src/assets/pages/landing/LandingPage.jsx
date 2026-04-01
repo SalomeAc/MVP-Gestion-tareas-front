@@ -36,7 +36,7 @@ export default function LandingPage() {
                 className="landing-image"
             />
 
-        <h1>Welcome to Task Manager</h1>
+        <h1>Bienvenido a Task Manager</h1>
 
         {!isLoggedIn ? (
           <>
@@ -61,7 +61,7 @@ export default function LandingPage() {
             className="landing-btn landing-btn-primary"
             onClick={() => navigate("/dashboard")}
           >
-            Go to Dashboard
+            Ir al Dashboard
           </button>
         )}
       </div>

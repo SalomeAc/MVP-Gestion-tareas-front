@@ -34,7 +34,7 @@ export async function registerUser({
   password,
   confirmPassword,
 }) {
-  return http.post("/api/users", {
+  return http.post("/api/users/register", {
     firstName,
     lastName,
     age,
