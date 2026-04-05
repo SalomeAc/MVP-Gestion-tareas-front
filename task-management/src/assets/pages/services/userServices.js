@@ -108,3 +108,11 @@ export async function deleteUserProfile({ token }) {
     },
   });
 }
+
+export async function deactivateUser(userId, token) {
+  return http.put(`/api/users/deactivate`, { userId }, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}

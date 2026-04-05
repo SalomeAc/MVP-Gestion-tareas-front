@@ -1,7 +1,9 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./logout.css"; // opcional
 
 const Logout = () => {
+  const navigate = useNavigate();
 
   useEffect(() => {
 
@@ -9,11 +11,13 @@ const Logout = () => {
     localStorage.removeItem("token");
 
     // ⏳ esperar y redirigir
-    setTimeout(() => {
-      window.location.href = "/";
-    }, 1000);
+    const timer = setTimeout(() => {
+      navigate("/login", { replace: true });
+    }, 800);
 
-  }, []);
+    return () => clearTimeout(timer);
+
+  }, [navigate]);
 
   return (
     <div className="spinner-overlay">

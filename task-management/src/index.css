@@ -218,6 +218,96 @@ footer {
     }
 }
 
+/* ==========================================
+   GLOBAL TOAST SYSTEM
+   ========================================== */
+
+.toast-container {
+    position: fixed !important;
+    right: 20px !important;
+    bottom: 20px !important;
+    top: auto !important;
+    left: auto !important;
+    z-index: 1500 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 10px !important;
+    width: min(360px, calc(100vw - 40px)) !important;
+    pointer-events: none !important;
+}
+
+.toast {
+    pointer-events: auto;
+    background: #2f2f35;
+    color: #ffffff;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+    padding: 12px 14px;
+    font-size: 0.95rem;
+    line-height: 1.4;
+    animation: appToastIn 220ms ease-out, appToastOut 260ms ease-in 3000ms forwards;
+}
+
+.toast.success {
+    background: #d9cde7 !important;
+    color: #2a2240 !important;
+    border-color: rgba(42, 34, 64, 0.26) !important;
+}
+
+.toast.error {
+    background: #721c24 !important;
+}
+
+.toast.info {
+    background: #245f92 !important;
+}
+
+@keyframes appToastIn {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes appToastOut {
+    to {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}
+
+@media (max-width: 768px) {
+    .toast-container {
+        right: 14px !important;
+        bottom: 14px !important;
+        width: min(340px, calc(100vw - 28px)) !important;
+    }
+
+    .toast {
+        font-size: 0.9rem;
+        padding: 11px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .toast-container {
+        right: 10px !important;
+        bottom: 10px !important;
+        width: calc(100vw - 20px) !important;
+    }
+
+    .toast {
+        border-radius: 8px;
+        font-size: 0.88rem;
+        padding: 10px 11px;
+    }
+}
+
 @media (max-width: 768px) {
     .content {
         flex-direction: column;

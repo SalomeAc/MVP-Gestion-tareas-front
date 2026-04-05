@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   getUserLists,
   deleteList
@@ -11,6 +12,7 @@ import {
 import "./Dashboard.css";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [lists, setLists] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [currentList, setCurrentList] = useState(null);
@@ -24,12 +26,12 @@ const Dashboard = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      window.location.href = "/login/";
+      navigate("/login", { replace: true });
       return;
     }
 
     loadLists(token);
-  }, []);
+  }, [navigate]);
 
   // cargar listas
   const loadLists = async (token) => {
@@ -120,7 +122,7 @@ const Dashboard = () => {
           ))}
         </ul>
 
-        <button onClick={() => window.location.href = "/create-list/"}>
+        <button onClick={() => navigate("/create-list")}>
           + Nueva lista
         </button>
 
@@ -145,7 +147,7 @@ const Dashboard = () => {
               alert("Selecciona una lista primero");
               return;
             }
-            window.location.href = `/create-task/?listId=${currentList._id}`;
+            navigate(`/create-task?listId=${currentList._id}`);
           }}
         >
           + Nueva tarea
