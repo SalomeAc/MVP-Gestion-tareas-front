@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://lumo-back-1.onrender.com/api/lists'; 
+const API_BASE_URL = 'http://localhost:3000/api/lists'; 
 
 /**
  * Get all lists for the current user.
