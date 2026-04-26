@@ -6,25 +6,27 @@ const TASKS_API_URL = "https://lumo-back-1.onrender.com/api/tasks";
 
 
 /**
- * Create a new task in a specific list.
+ * Create a new task.
  *
  * @param {string} token - JWT token for authorization.
- * @param {string} listId - The ID of the list where the task belongs.
+ * @param {string|null} listId - The ID of the list where the task belongs (optional).
  * @param {{title:string, description?:string, status?:string, dueDate?:string, [key:string]:any}} taskData - Task payload. `dueDate` should be an ISO-like string (e.g., "2025-09-16T10:30").
  * @returns {Promise<Object>} Resolves with the created task object from the API.
  * @throws {Error} If the API responds with a non-OK status code.
  */
 export async function createTask(token, listId, taskData) {
+  const payload = { ...taskData };
+  if (listId) {
+    payload.list = listId;
+  }
+
   const response = await fetch(TASKS_API_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`
     },
-    body: JSON.stringify({
-      list: listId, 
-      ...taskData
-    })
+    body: JSON.stringify(payload)
   });
 
   if (!response.ok) {
@@ -47,7 +49,7 @@ export async function createTask(token, listId, taskData) {
  */
 export async function getTasks(token, listId) {
   const response = await fetch(
-    `https://lumo-back-1.onrender.com/api/lists/get-tasks/${listId}`,
+    `http://localhost:3000/api/lists/get-tasks/${listId}`,
     {
       method: "GET",
       headers: {

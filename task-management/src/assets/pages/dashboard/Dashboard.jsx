@@ -17,7 +17,7 @@ const Dashboard = () => {
   const [tasks, setTasks] = useState([]);
   const [currentList, setCurrentList] = useState(null);
   const totalTasks = tasks.length;
-  const completedTasks = tasks.filter(t => t.status === "done").length;
+  const completedTasks = tasks.filter(t => t.status === "finalizada").length;
   const progressPercent = totalTasks > 0
     ? Math.round((completedTasks / totalTasks) * 100)
     : 0;
@@ -168,9 +168,9 @@ const Dashboard = () => {
                     value={task.status}
                     onChange={(e) => handleStatusChange(task._id, e.target.value)}
                   >
-                    <option value="unassigned">Por hacer</option>
-                    <option value="ongoing">Haciendo</option>
-                    <option value="done">Completada</option>
+                    <option value="pendiente">Por hacer</option>
+                    <option value="en curso">Haciendo</option>
+                    <option value="finalizada">Completada</option>
                   </select>
                 </label>
 

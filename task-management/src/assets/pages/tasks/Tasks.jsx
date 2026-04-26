@@ -9,6 +9,15 @@ const Tasks = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState("all");
 
+  const statusLabels = {
+    all: "Todas",
+    pendiente: "Pendientes",
+    "en curso": "En Progreso",
+    finalizada: "Completadas"
+  };
+
+  const statusClass = (status) => `status-${status.replace(/ /g, "-")}`;
+
   // 🔐 Cargar tareas al montarse el componente
   useEffect(() => {
     const loadTasks = async () => {
@@ -42,9 +51,9 @@ const Tasks = () => {
   // 📊 Estadísticas
   const stats = {
     total: tasks.length,
-    pending: tasks.filter(t => t.status === "pending").length,
-    inProgress: tasks.filter(t => t.status === "in-progress").length,
-    completed: tasks.filter(t => t.status === "done").length
+    pending: tasks.filter(t => t.status === "pendiente").length,
+    inProgress: tasks.filter(t => t.status === "en curso").length,
+    completed: tasks.filter(t => t.status === "finalizada").length
   };
 
   return (
@@ -97,16 +106,13 @@ const Tasks = () => {
 
       {/* FILTROS */}
       <div className="tasks-filters">
-        {["all", "pending", "in-progress", "done"].map(status => (
+        {['all', 'pendiente', 'en curso', 'finalizada'].map((status) => (
           <button
             key={status}
             className={`filter-btn ${filterStatus === status ? "active" : ""}`}
             onClick={() => setFilterStatus(status)}
           >
-            {status === "all" && "Todas"}
-            {status === "pending" && "Pendientes"}
-            {status === "in-progress" && "En Progreso"}
-            {status === "done" && "Completadas"}
+            {statusLabels[status]}
           </button>
         ))}
       </div>
@@ -126,7 +132,7 @@ const Tasks = () => {
               <p>
                 {filterStatus === "all"
                   ? "Comienza creando tu primera tarea"
-                  : `No hay tareas ${filterStatus === "done" ? "completadas" : "en este estado"}`}
+                  : `No hay tareas ${filterStatus === "finalizada" ? "finalizadas" : "en este estado"}`}
               </p>
               <button 
                 className="btn-create-primary"
@@ -141,10 +147,10 @@ const Tasks = () => {
                 <div key={task._id || task.id} className="task-card">
                   <div className="task-header">
                     <h4 className="task-title">{task.title}</h4>
-                    <span className={`task-status status-${task.status}`}>
-                      {task.status === "pending" && "Pendiente"}
-                      {task.status === "in-progress" && "En Progreso"}
-                      {task.status === "done" && "Completada"}
+                    <span className={`task-status ${statusClass(task.status)}`}>
+                      {task.status === "pendiente" && "Pendiente"}
+                      {task.status === "en curso" && "En Progreso"}
+                      {task.status === "finalizada" && "Completada"}
                     </span>
                   </div>
                   

@@ -164,9 +164,9 @@ const EditTask = () => {
                 value={form.status}
                 onChange={handleChange}
               >
-                <option value="unassigned">Por hacer</option>
-                <option value="ongoing">Haciendo</option>
-                <option value="done">Completada</option>
+                <option value="pendiente">Por hacer</option>
+                <option value="en curso">Haciendo</option>
+                <option value="finalizada">Completada</option>
               </select>
             </div>
 
