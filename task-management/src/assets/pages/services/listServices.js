@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3000/api/lists'; 
+const API_BASE_URL = `${import.meta.env.VITE_API_URL}/api/lists`;
 
 /**
  * Get all lists for the current user.
@@ -7,7 +7,7 @@ const API_BASE_URL = 'http://localhost:3000/api/lists';
  */
 export async function getUserLists(token) {
   try {
-    const response = await fetch(`${API_BASE_URL}/get-user-lists`, {
+    const response = await fetch(`${API_BASE_URL}`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -16,13 +16,14 @@ export async function getUserLists(token) {
     });
 
     if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(`Error ${response.status}: ${errorData.message || response.statusText}`);
     }
 
     return await response.json();
   } catch (error) {
     console.error('Error getting user lists:', error);
-    return [];
+    throw error;
   }
 }
 
@@ -44,7 +45,8 @@ export async function createList(title, token) {
     });
 
     if (!response.ok) {
-      throw new Error(`Error ${response.status}: ${response.statusText}`);
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(`Error ${response.status}: ${errorData.message || response.statusText}`);
     }
 
     return await response.json();

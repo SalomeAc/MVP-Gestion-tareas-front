@@ -11,7 +11,7 @@ function Navbar() {
       <nav className="navbar">
         <div className="navbar-logo">
           <Link to="/" className="logo-link" onClick={() => setMenuOpen(false)}>
-            <span className="logo-text">Lumo</span>
+            <span className="logo-text">Gestión Tareas</span>
           </Link>
         </div>
 

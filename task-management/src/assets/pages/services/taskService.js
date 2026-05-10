@@ -2,7 +2,7 @@
  * Base API endpoint for task-related operations.
  * @type {string}
  */
-const TASKS_API_URL = "http://localhost:3000/api/tasks";
+const TASKS_API_URL = `${import.meta.env.VITE_API_URL}/api/tasks`;
 
 
 /**
@@ -49,7 +49,7 @@ export async function createTask(token, listId, taskData) {
  */
 export async function getTasks(token, listId) {
   const response = await fetch(
-    `http://localhost:3000/api/lists/get-tasks/${listId}`,
+    `${import.meta.env.VITE_API_URL}/api/lists/get-tasks/${listId}`,
     {
       method: "GET",
       headers: {
