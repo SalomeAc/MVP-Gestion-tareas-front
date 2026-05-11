@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
-import { updateTask, getTasks } from "../services/taskService";
+import { useLocation } from "react-router-dom";
+import { updateTask, getAllTasks } from "../services/taskService";
 import "./EditTask.css";
 
 const EditTask = () => {
+  const location = useLocation();
 
   const [form, setForm] = useState({
     title: "",
@@ -15,8 +17,7 @@ const EditTask = () => {
   const [loading, setLoading] = useState(true);
 
   const token = localStorage.getItem("token");
-  const taskId = localStorage.getItem("editTaskId");
-  const listId = localStorage.getItem("currentListId");
+  const taskId = new URLSearchParams(location.search).get("id");
 
   // 🔐 validaciones iniciales
   useEffect(() => {
@@ -25,7 +26,7 @@ const EditTask = () => {
       return;
     }
 
-    if (!taskId || !listId) {
+    if (!taskId) {
       alert("Error: tarea o lista no encontrada");
       window.location.href = "/dashboard/";
       return;
@@ -37,7 +38,7 @@ const EditTask = () => {
   // 📦 cargar tarea
   const loadTask = async () => {
     try {
-      const tasks = await getTasks(token, listId);
+      const tasks = await getAllTasks(token);
       const task = tasks.find(t => (t._id || t.id) === taskId);
 
       if (!task) {
@@ -95,8 +96,6 @@ const EditTask = () => {
       });
 
       alert("Tarea actualizada ✅");
-
-      localStorage.removeItem("editTaskId");
 
       window.location.href = "/dashboard/";
 

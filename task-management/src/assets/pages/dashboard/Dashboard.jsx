@@ -5,7 +5,7 @@ import {
   deleteList
 } from "../services/listServices";
 import {
-  getTasks,
+  getAllTasks,
   deleteTask,
   updateTask
 } from "../services/taskService";
@@ -16,11 +16,43 @@ const Dashboard = () => {
   const [lists, setLists] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [currentList, setCurrentList] = useState(null);
+  const kanbanColumns = [
+    { key: "pendiente", label: "Por hacer", hint: "Tareas pendientes" },
+    { key: "en curso", label: "En progreso", hint: "Tareas en ejecución" },
+    { key: "finalizada", label: "Completadas", hint: "Tareas terminadas" },
+  ];
+
+  const tasksByStatus = kanbanColumns.reduce((accumulator, column) => {
+    accumulator[column.key] = tasks.filter(
+      (task) => (task.status || "pendiente") === column.key,
+    );
+    return accumulator;
+  }, {});
+
   const totalTasks = tasks.length;
   const completedTasks = tasks.filter(t => t.status === "finalizada").length;
   const progressPercent = totalTasks > 0
     ? Math.round((completedTasks / totalTasks) * 100)
     : 0;
+
+  // cargar listas
+  const loadLists = async (token) => {
+    try {
+      const data = await getUserLists(token);
+      setLists(data);
+
+      if (data.length > 0) {
+        setCurrentList(data[0]);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // seleccionar lista
+  const selectList = async (list) => {
+    setCurrentList(list);
+  };
 
   //cargar todo al inicio
   useEffect(() => {
@@ -30,36 +62,26 @@ const Dashboard = () => {
       return;
     }
 
-    loadLists(token);
-  }, [navigate]);
+    const loadInitialData = async () => {
+      try {
+        const [listData, taskData] = await Promise.all([
+          getUserLists(token),
+          getAllTasks(token),
+        ]);
 
-  // cargar listas
-  const loadLists = async (token) => {
-    try {
-      const data = await getUserLists(token);
-      setLists(data);
+        setLists(listData);
+        setTasks(taskData || []);
 
-      if (data.length > 0) {
-        selectList(data[0]);
+        if (listData.length > 0) {
+          setCurrentList(listData[0]);
+        }
+      } catch (err) {
+        console.error(err);
       }
-    } catch (err) {
-      console.error(err);
-    }
-  };
+    };
 
-  // seleccionar lista
-  const selectList = async (list) => {
-    const token = localStorage.getItem("token");
-
-    setCurrentList(list);
-
-    try {
-      const data = await getTasks(token, list._id || list.id);
-      setTasks(data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+    loadInitialData();
+  }, [navigate]);
 
   // eliminar lista
   const handleDeleteList = async (id) => {
@@ -143,45 +165,76 @@ const Dashboard = () => {
 
         <button
           onClick={() => {
-            if (!currentList) {
-              alert("Selecciona una lista primero");
-              return;
-            }
-            navigate(`/create-task?listId=${currentList._id}`);
+            navigate(currentList ? `/create-task?listId=${currentList._id}` : "/create-task");
           }}
         >
           + Nueva tarea
         </button>
 
-        <div className="tasks-grid">
-          {tasks.length === 0 ? (
+        {tasks.length === 0 ? (
+          <div className="kanban-empty-state">
             <p>No hay tareas</p>
-          ) : (
-            tasks.map((task) => (
-              <div key={task._id} className="task">
+          </div>
+        ) : (
+          <section className="kanban-board" aria-label="Tablero kanban de tareas">
+            {kanbanColumns.map((column) => (
+              <article key={column.key} className="kanban-column">
+                <header className="kanban-column-header">
+                  <div>
+                    <span>{column.label}</span>
+                    <p>{column.hint}</p>
+                  </div>
+                  <strong>{tasksByStatus[column.key].length}</strong>
+                </header>
 
-                <h3>{task.title}</h3>
-                <p>{task.description}</p>
-                <label>
-                  Estado:
-                  <select
-                    value={task.status}
-                    onChange={(e) => handleStatusChange(task._id, e.target.value)}
-                  >
-                    <option value="pendiente">Por hacer</option>
-                    <option value="en curso">Haciendo</option>
-                    <option value="finalizada">Completada</option>
-                  </select>
-                </label>
+                <div className="kanban-cards">
+                  {tasksByStatus[column.key].length === 0 ? (
+                    <div className="kanban-empty-column">Sin tareas</div>
+                  ) : (
+                    tasksByStatus[column.key].map((task) => (
+                      <div key={task._id || task.id} className="kanban-card">
+                        <div className="kanban-card-actions">
+                          <button
+                            className="kanban-edit"
+                            onClick={() => navigate(`/edit-task?id=${task._id || task.id}`)}
+                          >
+                            ✏️
+                          </button>
+                          <button
+                            className="kanban-delete"
+                            onClick={() => handleDeleteTask(task._id || task.id)}
+                          >
+                            🗑️
+                          </button>
+                        </div>
 
-                <button onClick={() => handleDeleteTask(task._id)}>
-                  🗑️
-                </button>
+                        <h3>{task.title}</h3>
+                        {task.description && <p>{task.description}</p>}
+                        {task.dueDate && (
+                          <div className="kanban-meta">
+                            📅 {new Date(task.dueDate).toLocaleDateString("es-ES")}
+                          </div>
+                        )}
 
-              </div>
-            ))
-          )}
-        </div>
+                        <label className="kanban-status-picker">
+                          <span>Estado</span>
+                          <select
+                            value={task.status || "pendiente"}
+                            onChange={(e) => handleStatusChange(task._id || task.id, e.target.value)}
+                          >
+                            <option value="pendiente">Por hacer</option>
+                            <option value="en curso">En progreso</option>
+                            <option value="finalizada">Completada</option>
+                          </select>
+                        </label>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </article>
+            ))}
+          </section>
+        )}
 
       </main>
     </div>
