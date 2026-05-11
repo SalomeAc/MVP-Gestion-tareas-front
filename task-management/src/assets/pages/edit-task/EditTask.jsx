@@ -1,179 +1,204 @@
 import { useEffect, useState } from "react";
-import { updateTask, getTasks } from "../services/taskService";
+import { useNavigate, useParams } from "react-router-dom";
+import { updateTask, getAllTasks } from "../services/taskService";
 import "./EditTask.css";
 
 const EditTask = () => {
-
+  const navigate = useNavigate();
+  const { id: taskId } = useParams();
+  
   const [form, setForm] = useState({
     title: "",
     description: "",
-    date: "",
-    time: "",
-    status: "unassigned"
+    dueDate: "",
+    status: "pendiente"
   });
-
+  
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const token = localStorage.getItem("token");
-  const taskId = localStorage.getItem("editTaskId");
-  const listId = localStorage.getItem("currentListId");
-
-  // 🔐 validaciones iniciales
   useEffect(() => {
+    const token = localStorage.getItem("token");
     if (!token) {
-      window.location.href = "/login/";
+      navigate("/login", { replace: true });
       return;
     }
 
-    if (!taskId || !listId) {
-      alert("Error: tarea o lista no encontrada");
-      window.location.href = "/dashboard/";
-      return;
-    }
+    loadData(token);
+  }, [navigate, taskId]);
 
-    loadTask();
-  }, []);
-
-  // 📦 cargar tarea
-  const loadTask = async () => {
+  const loadData = async (token) => {
     try {
-      const tasks = await getTasks(token, listId);
-      const task = tasks.find(t => (t._id || t.id) === taskId);
-
+      setLoading(true);
+      
+      // Obtener todas las tareas del usuario
+      const allTasks = await getAllTasks(token);
+      
+      // Buscar la tarea específica por ID
+      const task = allTasks.find(t => (t._id || t.id) === taskId);
+      
       if (!task) {
-        alert("No se encontró la tarea");
-        window.location.href = "/dashboard/";
+        console.error("Tarea no encontrada. ID buscado:", taskId);
+        console.error("Tareas disponibles:", allTasks);
+        setError("Tarea no encontrada");
         return;
       }
 
-      let date = "";
-      let time = "";
-
+      // Formatear la fecha si existe
+      let dueDate = "";
       if (task.dueDate) {
         const d = new Date(task.dueDate);
-        date = d.toISOString().split("T")[0];
-        time = d.toISOString().split("T")[1].substring(0, 5);
+        dueDate = d.toISOString().split("T")[0];
       }
 
       setForm({
         title: task.title || "",
         description: task.description || "",
-        date,
-        time,
-        status: task.status || "por hacer"
+        dueDate,
+        status: task.status || "pendiente"
       });
-
-      setLoading(false);
-
     } catch (err) {
-      console.error(err);
-      alert("Error cargando tarea");
+      console.error("Error cargando datos:", err);
+      setError("Error cargando la tarea: " + err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // ✏️ manejar cambios
   const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.id]: e.target.value
-    });
+    const { id, value } = e.target;
+    setForm(prev => ({ ...prev, [id]: value }));
   };
 
-  // 🚀 submit
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    if (!form.title.trim()) {
+      setError("El título es requerido");
+      return;
+    }
+
+    const token = localStorage.getItem("token");
+    setIsSubmitting(true);
+    setError("");
 
     try {
-      await updateTask(token, taskId, {
-        title: form.title,
-        description: form.description,
-        dueDate:
-          form.date && form.time
-            ? `${form.date}T${form.time}`
-            : null,
+      const taskData = {
+        title: form.title.trim(),
+        description: form.description.trim(),
         status: form.status
-      });
+      };
 
-      alert("Tarea actualizada ✅");
+      if (form.dueDate) {
+        taskData.dueDate = `${form.dueDate}T12:00:00.000Z`;
+      }
 
-      localStorage.removeItem("editTaskId");
-
-      window.location.href = "/dashboard/";
-
+      await updateTask(token, taskId, taskData);
+      navigate("/tasks", { replace: true });
     } catch (err) {
-      console.error(err);
-      alert("Error actualizando tarea ❌");
+      console.error("Error actualizando tarea:", err);
+      setError(err.message || "Error actualizando la tarea");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  if (loading) return <p>Cargando...</p>;
+  if (loading) {
+    return (
+      <div className="edit-task-container">
+        <div className="loading-state">
+          <div className="spinner"></div>
+          <p>Cargando tarea...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="modal-overlay">
-      <div className="box">
-        <div className="modal-window">
+    <div className="edit-task-container">
+      <div className="edit-task-wrapper">
+        <div className="edit-task-header">
+          <h1>Editar Tarea</h1>
+          <p>Modifica los detalles de tu tarea</p>
+        </div>
 
-          <h2>Editar tarea</h2>
+        {error && (
+          <div className="error-message">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" fill="currentColor"/>
+            </svg>
+            {error}
+          </div>
+        )}
 
-          <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="edit-task-form">
+          <div className="form-group">
+            <label htmlFor="title">Título *</label>
+            <input
+              type="text"
+              id="title"
+              value={form.title}
+              onChange={handleChange}
+              placeholder="Ingresa el título de la tarea"
+              required
+            />
+          </div>
 
-            <div className="row">
-              <label>Título:</label>
-              <input
-                id="title"
-                value={form.title}
-                onChange={handleChange}
-                required
-              />
-            </div>
+          <div className="form-group">
+            <label htmlFor="description">Descripción</label>
+            <textarea
+              id="description"
+              value={form.description}
+              onChange={handleChange}
+              placeholder="Añade una descripción detallada (opcional)"
+              rows="5"
+            />
+          </div>
 
-            <div className="row">
-              <label>Descripción:</label>
-              <textarea
-                id="description"
-                value={form.description}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="row">
-              <label>Fecha:</label>
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="dueDate">Fecha de vencimiento</label>
               <input
                 type="date"
-                id="date"
-                value={form.date}
+                id="dueDate"
+                value={form.dueDate}
                 onChange={handleChange}
               />
             </div>
 
-            <div className="row">
-              <label>Hora:</label>
-              <input
-                type="time"
-                id="time"
-                value={form.time}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="row">
-              <label>Estado:</label>
+            <div className="form-group">
+              <label htmlFor="status">Estado</label>
               <select
                 id="status"
                 value={form.status}
                 onChange={handleChange}
               >
-                <option value="pendiente">Por hacer</option>
-                <option value="en curso">Haciendo</option>
+                <option value="pendiente">Pendiente</option>
+                <option value="en curso">En Progreso</option>
                 <option value="finalizada">Completada</option>
               </select>
             </div>
+          </div>
 
-            <button type="submit">Guardar</button>
-
-          </form>
-        </div>
+          <div className="form-actions">
+            <button
+              type="button"
+              className="btn-cancel"
+              onClick={() => navigate(-1)}
+              disabled={isSubmitting}
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              className="btn-save"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? "Guardando..." : "Guardar Cambios"}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

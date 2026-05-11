@@ -16,6 +16,7 @@ const Dashboard = () => {
   const [lists, setLists] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [currentList, setCurrentList] = useState(null);
+  const [modal, setModal] = useState({ isOpen: false, type: null, id: null, name: "" });
   const totalTasks = tasks.length;
   const completedTasks = tasks.filter(t => t.status === "finalizada").length;
   const progressPercent = totalTasks > 0
@@ -54,26 +55,34 @@ const Dashboard = () => {
     }
   };
 
-  const handleDeleteList = async (id) => {
+  const handleDeleteList = (id, name) => {
+    setModal({ isOpen: true, type: "list", id, name });
+  };
+
+  const handleDeleteTask = (id, name) => {
+    setModal({ isOpen: true, type: "task", id, name });
+  };
+
+  const confirmDelete = async () => {
+    const { type, id } = modal;
     const token = localStorage.getItem("token");
-    if (!confirm("¿Eliminar esta lista?")) return;
+    
     try {
-      await deleteList(token, id);
-      loadLists(token);
+      if (type === "list") {
+        await deleteList(token, id);
+        loadLists(token);
+      } else if (type === "task") {
+        await deleteTask(token, id);
+        setTasks(tasks.filter(t => t._id !== id));
+      }
+      setModal({ isOpen: false, type: null, id: null, name: "" });
     } catch (err) {
       console.error(err);
     }
   };
 
-  const handleDeleteTask = async (id) => {
-    const token = localStorage.getItem("token");
-    if (!confirm("¿Eliminar esta tarea?")) return;
-    try {
-      await deleteTask(token, id);
-      setTasks(tasks.filter(t => t._id !== id));
-    } catch (err) {
-      console.error(err);
-    }
+  const closeModal = () => {
+    setModal({ isOpen: false, type: null, id: null, name: "" });
   };
 
   const handleStatusChange = async (taskId, newStatus) => {
@@ -131,11 +140,11 @@ const Dashboard = () => {
                       <button
                         type="button"
                         className="lists-item-delete"
-                        onClick={() => handleDeleteList(listId)}
+                        onClick={() => handleDeleteList(listId, list.title)}
                         aria-label={`Eliminar ${list.title}`}
                       >
                         {/* Ícono de basura SVG */}
-                        <svg viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" width="18" height="18">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="16" height="16">
                           <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                           <path d="M10 11v5M14 11v5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
                         </svg>
@@ -189,7 +198,7 @@ const Dashboard = () => {
               </div>
 
               {/* Lista de tareas horizontal */}
-              <div className="tasks-list">
+              <div className="tasks-list-container">
                 {tasks.length === 0 ? (
                   <div className="empty-state">
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -241,7 +250,7 @@ const Dashboard = () => {
                         <button
                           type="button"
                           className="task-icon-btn task-delete-btn"
-                          onClick={() => handleDeleteTask(task._id)}
+                          onClick={() => handleDeleteTask(task._id, task.title)}
                           aria-label={`Eliminar ${task.title}`}
                         >
                           {/* Ícono basura */}
@@ -269,6 +278,41 @@ const Dashboard = () => {
           )}
         </main>
       </div>
+
+      {/* Modal de confirmación */}
+      {modal.isOpen && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-icon">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z" fill="currentColor"/>
+              </svg>
+            </div>
+            <h2 className="modal-title">
+              ¿Eliminar {modal.type === "list" ? "lista" : "tarea"}?
+            </h2>
+            <p className="modal-text">
+              ¿Realmente quieres eliminar <strong>"{modal.name}"</strong>? Esta acción no se puede deshacer.
+            </p>
+            <div className="modal-actions">
+              <button
+                type="button"
+                className="modal-btn modal-btn-cancel"
+                onClick={closeModal}
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                className="modal-btn modal-btn-delete"
+                onClick={confirmDelete}
+              >
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
