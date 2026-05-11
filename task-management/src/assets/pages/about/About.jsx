@@ -9,8 +9,8 @@ const About = () => {
         <div className="hero-content">
           <div className="hero-img">
             <img
-              src="/Lumix.png"
-              alt="Mascota Lumo"
+              src="/LumixAnimal.png"
+              alt="Mascota GestionTarea"
               style={{ maxWidth: "220px", width: "100%", height: "auto" }}
             />
           </div>
@@ -25,7 +25,7 @@ const About = () => {
 
       <section className="why">
         <h2>
-          ¿Por qué elegir <span className="highlight">Lumo</span>?
+          ¿Por qué elegir <span className="highlight">Gestión de Tareas</span>?
         </h2>
 
         <div className="why-content">

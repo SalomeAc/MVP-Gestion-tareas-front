@@ -115,7 +115,7 @@ function App() {
           )}
         />
         <Route
-          path="/edit-task"
+          path="/edit-task/:id"
           element={withLayout(
             <RequireAuth>
               <EditTask />

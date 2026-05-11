@@ -56,7 +56,8 @@
 }
 
 .logo-link:hover {
-  transform: translateY(-2px);
+  color: #7d5fa8;
+  transition: color 0.3s ease;
 }
 
 /* ==========================================
@@ -104,7 +105,7 @@
 }
 
 .logout-btn {
-  background: #721c24;
+  background: linear-gradient(135deg, #9d7fc4 0%, #7d5fa8 100%);
   color: #ffffff;
   padding: 0.38rem 0.72rem;
   font-size: 0.78rem;
@@ -113,7 +114,8 @@
 }
 
 .logout-btn:hover {
-  background: #5a1418;
+  background: linear-gradient(135deg, #7d5fa8 0%, #6d4f98 100%);
+  box-shadow: 0 4px 12px rgba(157, 127, 196, 0.3);
 }
 
 .nav-icon {
