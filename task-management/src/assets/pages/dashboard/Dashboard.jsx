@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import {
   getUserLists,
-  deleteList
+  deleteList,
+  updateList
 } from "../services/listServices";
 import {
   getAllTasks,
@@ -40,7 +41,6 @@ const Dashboard = () => {
     try {
       const data = await getUserLists(token);
       setLists(data);
-
       if (data.length > 0) {
         setCurrentList(data[0]);
       }
@@ -49,7 +49,6 @@ const Dashboard = () => {
     }
   };
 
-  // seleccionar lista
   const selectList = async (list) => {
     setCurrentList(list);
   };
@@ -83,44 +82,75 @@ const Dashboard = () => {
     loadInitialData();
   }, [navigate]);
 
-  // eliminar lista
-  const handleDeleteList = async (id) => {
+  const handleDeleteList = (id, name) => {
+    setModal({ isOpen: true, type: "list", id, name, mode: "delete", editInputValue: "" });
+  };
+
+  const handleEditList = (id, name) => {
+    setModal({ isOpen: true, type: "list", id, name, mode: "edit", editInputValue: name });
+  };
+
+  const handleDeleteTask = (id, name) => {
+    setModal({ isOpen: true, type: "task", id, name, mode: "delete", editInputValue: "" });
+  };
+
+  const confirmDelete = async () => {
+    const { type, id } = modal;
     const token = localStorage.getItem("token");
-
-    if (!confirm("¿Eliminar lista?")) return;
-
+    
     try {
-      await deleteList(token, id);
-      loadLists(token);
+      if (type === "list") {
+        await deleteList(token, id);
+        loadLists(token);
+      } else if (type === "task") {
+        await deleteTask(token, id);
+        setTasks(tasks.filter(t => t._id !== id));
+      }
+      setModal({ isOpen: false, type: null, id: null, name: "", mode: null, editInputValue: "" });
     } catch (err) {
       console.error(err);
     }
   };
 
-  // eliminar tarea
-  const handleDeleteTask = async (id) => {
+  const confirmEdit = async () => {
+    const { type, id, editInputValue } = modal;
     const token = localStorage.getItem("token");
-
-    if (!confirm("¿Eliminar tarea?")) return;
-
+    
+    if (!editInputValue.trim()) {
+      console.error("El nombre de la lista no puede estar vacío");
+      return;
+    }
+    
     try {
-      await deleteTask(token, id);
-      setTasks(tasks.filter(t => t._id !== id));
+      if (type === "list") {
+        await updateList(token, id, editInputValue);
+        loadLists(token);
+      }
+      setModal({ isOpen: false, type: null, id: null, name: "", mode: null, editInputValue: "" });
     } catch (err) {
       console.error(err);
     }
+  };
+
+  const closeModal = () => {
+    setModal({ isOpen: false, type: null, id: null, name: "", mode: null, editInputValue: "" });
   };
 
   const handleStatusChange = async (taskId, newStatus) => {
     const token = localStorage.getItem("token");
-
     try {
       await updateTask(token, taskId, { status: newStatus });
       setTasks(tasks.map(t => t._id === taskId ? { ...t, status: newStatus } : t));
     } catch (err) {
       console.error(err);
     }
-  }
+  };
+
+  const statusLabel = {
+    pendiente: "Por hacer",
+    "en curso": "En curso",
+    finalizada: "Completada",
+  };
 
   return (
     <div className="app">

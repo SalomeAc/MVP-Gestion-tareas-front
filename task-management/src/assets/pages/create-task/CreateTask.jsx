@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { createTask } from "../services/taskService";
+import { getUserLists } from "../services/listServices";
 import "./CreateTask.css";
 
 const CreateTask = () => {
@@ -10,16 +11,34 @@ const CreateTask = () => {
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [status, setStatus] = useState("pendiente");
+  const [listId, setListId] = useState(() => {
+    // Obtener listId de parámetros de URL si viene del Dashboard
+    return searchParams.get("listId") || "";
+  });
+  const [lists, setLists] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
   const listId = new URLSearchParams(location.search).get("listId");
 
-  // 🔐 Validación de token
+  // 🔐 Validación de token y cargar listas
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
       navigate("/login");
+      return;
     }
+
+    // Cargar listas disponibles
+    const loadLists = async () => {
+      try {
+        const userLists = await getUserLists(token);
+        setLists(userLists || []);
+      } catch (err) {
+        console.error("Error cargando listas:", err);
+      }
+    };
+
+    loadLists();
   }, [navigate]);
 
   // 📝 Validar formulario
@@ -82,7 +101,6 @@ const CreateTask = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="create-task-form">
-          {/* Título */}
           <div className="form-group">
             <label htmlFor="title">Título *</label>
             <input
@@ -98,7 +116,6 @@ const CreateTask = () => {
             {errors.title && <span className="error-message">{errors.title}</span>}
           </div>
 
-          {/* Descripción */}
           <div className="form-group">
             <label htmlFor="description">Descripción</label>
             <textarea
@@ -110,7 +127,6 @@ const CreateTask = () => {
             />
           </div>
 
-          {/* Fecha Límite */}
           <div className="form-group">
             <label htmlFor="dueDate">Fecha Límite</label>
             <input
@@ -124,7 +140,22 @@ const CreateTask = () => {
             {errors.dueDate && <span className="error-message">{errors.dueDate}</span>}
           </div>
 
-          {/* Estado */}
+          <div className="form-group">
+            <label htmlFor="listId">Lista (Opcional)</label>
+            <select
+              id="listId"
+              value={listId}
+              onChange={(e) => setListId(e.target.value)}
+            >
+              <option value="">Sin asignar</option>
+              {lists.map((list) => (
+                <option key={list._id} value={list._id}>
+                  {list.title}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <div className="form-group">
             <label htmlFor="status">Estado</label>
             <select
@@ -138,14 +169,12 @@ const CreateTask = () => {
             </select>
           </div>
 
-          {/* Errores */}
           {errors.submit && (
             <div className="alert alert-error">
               {errors.submit}
             </div>
           )}
 
-          {/* Botones */}
           <div className="form-actions">
             <button
               type="submit"

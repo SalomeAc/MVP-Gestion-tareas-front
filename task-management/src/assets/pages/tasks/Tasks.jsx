@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+<<<<<<< Angie
 import { getAllTasks } from "../services/taskService";
+=======
+import { getAllTasks, deleteTask, updateTask } from "../services/taskService";
+>>>>>>> Develop
 import "./Tasks.css";
 
 const Tasks = () => {
@@ -8,6 +12,7 @@ const Tasks = () => {
   const [tasks, setTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState("all");
+  const [modal, setModal] = useState({ isOpen: false, id: null, name: "" });
 
   const statusLabels = {
     all: "Todas",
@@ -18,7 +23,7 @@ const Tasks = () => {
 
   const statusClass = (status) => `status-${status.replace(/ /g, "-")}`;
 
-  // 🔐 Cargar tareas al montarse el componente
+  
   useEffect(() => {
     const loadTasks = async () => {
       const token = localStorage.getItem("token");
@@ -30,7 +35,11 @@ const Tasks = () => {
 
       try {
         setIsLoading(true);
+<<<<<<< Angie
         // Obtener todas las tareas del usuario desde MongoDB
+=======
+        // Obtener tareas del usuario
+>>>>>>> Develop
         const data = await getAllTasks(token);
         setTasks(data || []);
       } catch (err) {
@@ -43,12 +52,12 @@ const Tasks = () => {
     loadTasks();
   }, [navigate]);
 
-  // 🔍 Filtrar tareas por estado
+ 
   const filteredTasks = filterStatus === "all" 
     ? tasks 
     : tasks.filter(task => task.status === filterStatus);
 
-  // 📊 Estadísticas
+ 
   const stats = {
     total: tasks.length,
     pending: tasks.filter(t => t.status === "pendiente").length,
@@ -56,12 +65,30 @@ const Tasks = () => {
     completed: tasks.filter(t => t.status === "finalizada").length
   };
 
+  const handleDeleteTask = (id, name) => {
+    setModal({ isOpen: true, id, name });
+  };
+
+  const confirmDelete = async () => {
+    const token = localStorage.getItem("token");
+    try {
+      await deleteTask(token, modal.id);
+      setTasks(tasks.filter(t => t._id !== modal.id));
+      setModal({ isOpen: false, id: null, name: "" });
+    } catch (err) {
+      console.error("Error eliminando tarea:", err);
+    }
+  };
+
+  const closeModal = () => {
+    setModal({ isOpen: false, id: null, name: "" });
+  };
+
   return (
     <div className="tasks-container">
-      {/* HEADER */}
       <div className="tasks-header">
         <div className="tasks-title">
-          <h1>✓ Mis Tareas</h1>
+          <h1> Mis Tareas</h1>
           <p>Gestiona y organiza tus tareas de forma eficiente</p>
         </div>
         <button 
@@ -72,31 +99,26 @@ const Tasks = () => {
         </button>
       </div>
 
-      {/* ESTADÍSTICAS */}
       <div className="tasks-stats">
         <div className="stat-card">
-          <span className="stat-icon">📋</span>
           <div className="stat-content">
             <p className="stat-label">Total</p>
             <p className="stat-value">{stats.total}</p>
           </div>
         </div>
         <div className="stat-card">
-          <span className="stat-icon">⏳</span>
           <div className="stat-content">
             <p className="stat-label">Pendientes</p>
             <p className="stat-value">{stats.pending}</p>
           </div>
         </div>
         <div className="stat-card">
-          <span className="stat-icon">🔄</span>
           <div className="stat-content">
             <p className="stat-label">En Progreso</p>
             <p className="stat-value">{stats.inProgress}</p>
           </div>
         </div>
         <div className="stat-card completed">
-          <span className="stat-icon">✅</span>
           <div className="stat-content">
             <p className="stat-label">Completadas</p>
             <p className="stat-value">{stats.completed}</p>
@@ -104,7 +126,6 @@ const Tasks = () => {
         </div>
       </div>
 
-      {/* FILTROS */}
       <div className="tasks-filters">
         {['all', 'pendiente', 'en curso', 'finalizada'].map((status) => (
           <button
@@ -117,7 +138,6 @@ const Tasks = () => {
         ))}
       </div>
 
-      {/* CONTENIDO */}
       {isLoading ? (
         <div className="tasks-loading">
           <div className="spinner"></div>
@@ -127,7 +147,6 @@ const Tasks = () => {
         <>
           {filteredTasks.length === 0 ? (
             <div className="tasks-empty">
-              <div className="empty-icon">📭</div>
               <h3>No hay tareas</h3>
               <p>
                 {filterStatus === "all"
@@ -160,19 +179,22 @@ const Tasks = () => {
                   
                   {task.dueDate && (
                     <p className="task-due-date">
-                      📅 Vence: {new Date(task.dueDate).toLocaleDateString("es-ES")}
+                      Vence: {new Date(task.dueDate).toLocaleDateString("es-ES")}
                     </p>
                   )}
                   
                   <div className="task-actions">
                     <button 
                       className="task-btn edit-btn"
-                      onClick={() => navigate(`/edit-task?id=${task._id || task.id}`)}
+                      onClick={() => navigate(`/edit-task/${task._id || task.id}`)}
                     >
-                      ✏️ Editar
+                      Editar
                     </button>
-                    <button className="task-btn delete-btn">
-                      🗑️ Eliminar
+                    <button 
+                      className="task-btn delete-btn"
+                      onClick={() => handleDeleteTask(task._id, task.title)}
+                    >
+                      Eliminar
                     </button>
                   </div>
                 </div>
@@ -180,6 +202,38 @@ const Tasks = () => {
             </div>
           )}
         </>
+      )}
+
+      {modal.isOpen && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-icon">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2m3 0v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6h12zM10 11v6M14 11v6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="currentColor"/>
+              </svg>
+            </div>
+            <h2 className="modal-title">¿Eliminar tarea?</h2>
+            <p className="modal-text">
+              ¿Realmente quieres eliminar <strong>"{modal.name}"</strong>? Esta acción no se puede deshacer.
+            </p>
+            <div className="modal-actions">
+              <button
+                type="button"
+                className="modal-btn modal-btn-cancel"
+                onClick={closeModal}
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                className="modal-btn modal-btn-delete"
+                onClick={confirmDelete}
+              >
+                Eliminar
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
