@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-<<<<<<< Angie
-import { getAllTasks } from "../services/taskService";
-=======
 import { getAllTasks, deleteTask, updateTask } from "../services/taskService";
->>>>>>> Develop
 import "./Tasks.css";
 
 const Tasks = () => {
@@ -35,11 +31,7 @@ const Tasks = () => {
 
       try {
         setIsLoading(true);
-<<<<<<< Angie
-        // Obtener todas las tareas del usuario desde MongoDB
-=======
         // Obtener tareas del usuario
->>>>>>> Develop
         const data = await getAllTasks(token);
         setTasks(data || []);
       } catch (err) {
