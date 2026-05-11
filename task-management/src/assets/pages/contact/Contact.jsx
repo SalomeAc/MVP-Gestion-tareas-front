@@ -74,8 +74,8 @@ const Contact = () => {
 
             <div className="micro-note">
               También puedes escribirnos directamente a{" "}
-              <a href="mailto:lumo.notreplay@gmail.com">
-                lumo.notreplay@gmail.com
+              <a href="mailto:gestiontareas.notreplay@gmail.com">
+                gestiontareas.notreplay@gmail.com
               </a>
             </div>
           </form>
@@ -92,7 +92,7 @@ const Contact = () => {
 
           <div className="side-logo">
             <img
-              src="/Lumo3.png"
+              src="/AnimalContact.png"
               alt="Lumo logo"
               className="side-logo-img-big"
             />
@@ -112,7 +112,7 @@ const Contact = () => {
               <div className="ic">✉️</div>
               <div className="info">
                 <div className="info-title">Correo electrónico</div>
-                <div className="info-text">support@lumo.example</div>
+                <div className="info-text">gestiontareas.notreplay@gmail.com</div>
               </div>
             </div>
 

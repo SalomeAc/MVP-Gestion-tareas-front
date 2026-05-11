@@ -1,16 +1,17 @@
 /* CONTENEDOR PRINCIPAL */
 .sidebar {
   width: 260px;
-  height: 100vh;
+  height: calc(100vh - 72px);
   background-color: #1e1e2f;
   color: #fff;
   position: fixed;
   left: 0;
-  top: 0;
+  top: 72px;
   padding: 1rem;
   display: flex;
   flex-direction: column;
   transition: transform 0.3s ease;
+  z-index: 950;
 }
 
 /* PARA MÓVIL (cerrado) */
@@ -86,7 +87,7 @@
 @media (max-width: 640px) {
   .sidebar {
     position: fixed;
-    z-index: 1000;
+    z-index: 950;
     transform: translateX(-100%);
   }
 

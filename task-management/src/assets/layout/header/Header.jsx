@@ -1,38 +1,56 @@
 import "./Header.css"
 import { Link } from "react-router-dom"
+import { useState } from "react"
 
 function Navbar() {
-
   const token = localStorage.getItem("token")
+  const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <header>
-      <nav id="menu">
-
-        <div className="logo">
-          <Link to="/">
-            <img src="/lumo-dashboard.png" alt="Logo de Lumo" style={{ width: "12rem" }} />
+    <header className="navbar-header">
+      <nav className="navbar">
+        <div className="navbar-logo">
+          <Link to="/" className="logo-link" onClick={() => setMenuOpen(false)}>
+            <span className="logo-text">Gestión Tareas</span>
           </Link>
         </div>
 
-        <ul className="links">
-          <li><Link to="/">Inicio</Link></li>
-          <li><Link to="/about">Sobre nosotros</Link></li>
-          <li><Link to="/contact">Contáctanos</Link></li>
-        </ul>
+        <button
+          className="menu-toggle"
+          onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle menu"
+          type="button"
+        >
+          <span className="menu-icon"></span>
+          <span className="menu-icon"></span>
+          <span className="menu-icon"></span>
+        </button>
 
-        <div className="login-btn" style={{ display: "flex", gap: "0.7em", alignItems: "center" }}>
-          {token ? (
-            <>
-              <Link to="/dashboard">Dashboard</Link>
-              <Link to="/user-profile">Ver perfil</Link>
-              <Link to="/logout">Cerrar sesión</Link>
-            </>
-          ) : (
-            <Link to="/login">Iniciar sesión</Link>
-          )}
-        </div>
-
+        {token ? (
+          <div className={`navbar-nav authenticated ${menuOpen ? "open" : ""}`}>
+            <Link to="/dashboard" className="nav-link" onClick={() => setMenuOpen(false)}>
+              Dashboard
+            </Link>
+            <Link to="/tasks" className="nav-link" onClick={() => setMenuOpen(false)}>
+              Tareas
+            </Link>
+            <Link to="/user-profile" className="nav-link" onClick={() => setMenuOpen(false)}>
+              Perfil
+            </Link>
+            <Link to="/logout" className="nav-link logout-btn" onClick={() => setMenuOpen(false)}>
+              Cerrar sesion
+            </Link>
+          </div>
+        ) : (
+          <div className={`navbar-nav unauthenticated ${menuOpen ? "open" : ""}`}>
+            <Link to="/login" className="nav-link" onClick={() => setMenuOpen(false)}>
+              Iniciar sesion
+            </Link>
+            <Link to="/register" className="nav-link register" onClick={() => setMenuOpen(false)}>
+              Registro
+            </Link>
+          </div>
+        )}
       </nav>
     </header>
   )

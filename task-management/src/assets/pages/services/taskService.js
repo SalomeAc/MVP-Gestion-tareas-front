@@ -2,29 +2,31 @@
  * Base API endpoint for task-related operations.
  * @type {string}
  */
-const TASKS_API_URL = "https://lumo-back-1.onrender.com/api/tasks";
+const TASKS_API_URL = `${import.meta.env.VITE_API_URL}/api/tasks`;
 
 
 /**
- * Create a new task in a specific list.
+ * Create a new task.
  *
  * @param {string} token - JWT token for authorization.
- * @param {string} listId - The ID of the list where the task belongs.
+ * @param {string|null} listId - The ID of the list where the task belongs (optional).
  * @param {{title:string, description?:string, status?:string, dueDate?:string, [key:string]:any}} taskData - Task payload. `dueDate` should be an ISO-like string (e.g., "2025-09-16T10:30").
  * @returns {Promise<Object>} Resolves with the created task object from the API.
  * @throws {Error} If the API responds with a non-OK status code.
  */
 export async function createTask(token, listId, taskData) {
+  const payload = { ...taskData };
+  if (listId) {
+    payload.list = listId;
+  }
+
   const response = await fetch(TASKS_API_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${token}`
     },
-    body: JSON.stringify({
-      list: listId, 
-      ...taskData
-    })
+    body: JSON.stringify(payload)
   });
 
   if (!response.ok) {
@@ -38,6 +40,35 @@ export async function createTask(token, listId, taskData) {
 
 
 /**
+ * Retrieve all tasks for the authenticated user.
+ *
+ * @param {string} token - JWT token for authorization.
+ * @returns {Promise<Array>} Resolves with an array of task objects.
+ * @throws {Error} If the API responds with a non-OK status code.
+ */
+export async function getAllTasks(token) {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/tasks`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      }
+    }
+  );
+
+  if (!response.ok) {
+    const text = await response.text();
+    console.error("Error getAllTasks:", text);
+    throw new Error(`Error ${response.status}`);
+  }
+
+  const data = await response.json();
+  return Array.isArray(data) ? data : (data.tasks ?? []);
+}
+
+/**
  * Retrieve all tasks for a given list.
  *
  * @param {string} token - JWT token for authorization.
@@ -47,7 +78,7 @@ export async function createTask(token, listId, taskData) {
  */
 export async function getTasks(token, listId) {
   const response = await fetch(
-    `https://lumo-back-1.onrender.com/api/lists/get-tasks/${listId}`,
+    `${import.meta.env.VITE_API_URL}/api/lists/get-tasks/${listId}`,
     {
       method: "GET",
       headers: {
