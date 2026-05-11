@@ -1,23 +1,43 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { createTask } from "../services/taskService";
+import { getUserLists } from "../services/listServices";
 import "./CreateTask.css";
 
 const CreateTask = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState("");
   const [status, setStatus] = useState("pendiente");
+  const [listId, setListId] = useState(() => {
+    // Obtener listId de parámetros de URL si viene del Dashboard
+    return searchParams.get("listId") || "";
+  });
+  const [lists, setLists] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
-  // 🔐 Validación de token
+  // 🔐 Validación de token y cargar listas
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
       navigate("/login");
+      return;
     }
+
+    // Cargar listas disponibles
+    const loadLists = async () => {
+      try {
+        const userLists = await getUserLists(token);
+        setLists(userLists || []);
+      } catch (err) {
+        console.error("Error cargando listas:", err);
+      }
+    };
+
+    loadLists();
   }, [navigate]);
 
   // 📝 Validar formulario
@@ -50,7 +70,7 @@ const CreateTask = () => {
     setErrors({});
 
     try {
-      await createTask(token, null, {
+      await createTask(token, listId || null, {
         title: title.trim(),
         description: description.trim(),
         dueDate: dueDate || null,
@@ -120,6 +140,23 @@ const CreateTask = () => {
               className={errors.dueDate ? "input-error" : ""}
             />
             {errors.dueDate && <span className="error-message">{errors.dueDate}</span>}
+          </div>
+
+          {/* Lista */}
+          <div className="form-group">
+            <label htmlFor="listId">Lista (Opcional)</label>
+            <select
+              id="listId"
+              value={listId}
+              onChange={(e) => setListId(e.target.value)}
+            >
+              <option value="">Sin asignar</option>
+              {lists.map((list) => (
+                <option key={list._id} value={list._id}>
+                  {list.title}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Estado */}

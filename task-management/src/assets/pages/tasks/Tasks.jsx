@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getTasks } from "../services/taskService";
+import { getAllTasks } from "../services/taskService";
 import "./Tasks.css";
 
 const Tasks = () => {
@@ -31,7 +31,7 @@ const Tasks = () => {
       try {
         setIsLoading(true);
         // Obtener tareas del usuario
-        const data = await getTasks(token);
+        const data = await getAllTasks(token);
         setTasks(data || []);
       } catch (err) {
         console.error("Error cargando tareas:", err);

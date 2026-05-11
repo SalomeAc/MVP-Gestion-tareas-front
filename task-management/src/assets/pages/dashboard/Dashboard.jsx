@@ -86,10 +86,17 @@ const Dashboard = () => {
     }
   };
 
+  const statusLabel = {
+    pendiente: "Por hacer",
+    "en curso": "En curso",
+    finalizada: "Completada",
+  };
+
   return (
     <div className="dashboard-wrapper">
       <div className="dashboard-container">
-        {/* Sidebar con listas */}
+
+        {/* Sidebar */}
         <aside className="dashboard-lists-panel">
           <div className="lists-header">
             <div className="lists-icon">
@@ -113,7 +120,7 @@ const Dashboard = () => {
                   const listId = list._id || list.id;
                   const isActive = currentList && listId === (currentList._id || currentList.id);
                   return (
-                    <li key={listId}>
+                    <li key={listId} className="lists-li">
                       <button
                         type="button"
                         className={`lists-item ${isActive ? "is-active" : ""}`}
@@ -127,7 +134,11 @@ const Dashboard = () => {
                         onClick={() => handleDeleteList(listId)}
                         aria-label={`Eliminar ${list.title}`}
                       >
-                        ✕
+                        {/* Ícono de basura SVG */}
+                        <svg viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg" width="18" height="18">
+                          <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          <path d="M10 11v5M14 11v5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                        </svg>
                       </button>
                     </li>
                   );
@@ -141,7 +152,7 @@ const Dashboard = () => {
           </Link>
         </aside>
 
-        {/* Main content */}
+        {/* Main */}
         <main className="dashboard-main-panel">
           {currentList ? (
             <>
@@ -164,7 +175,7 @@ const Dashboard = () => {
                   <div
                     className="progress-bar-fill"
                     style={{ width: `${progressPercent}%` }}
-                  ></div>
+                  />
                 </div>
               </div>
 
@@ -177,7 +188,8 @@ const Dashboard = () => {
                 </Link>
               </div>
 
-              <div className="tasks-container">
+              {/* Lista de tareas horizontal */}
+              <div className="tasks-list">
                 {tasks.length === 0 ? (
                   <div className="empty-state">
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -188,37 +200,59 @@ const Dashboard = () => {
                     <p>Crea una nueva tarea para empezar</p>
                   </div>
                 ) : (
-                  <div className="tasks-grid">
-                    {tasks.map((task) => (
-                      <article key={task._id} className={`task-item task-status-${task.status}`}>
-                        <div className="task-header">
-                          <h3>{task.title}</h3>
-                          <button
-                            type="button"
-                            className="task-delete-btn"
-                            onClick={() => handleDeleteTask(task._id)}
-                            aria-label={`Eliminar ${task.title}`}
-                          >
-                            ✕
-                          </button>
-                        </div>
+                  tasks.map((task) => (
+                    <div key={task._id} className={`task-row task-status-${task.status.replace(" ", "-")}`}>
 
-                        <p className="task-description">{task.description}</p>
+                      {/* Punto de color de estado */}
+                      <span className={`status-dot dot-${task.status.replace(" ", "-")}`} />
 
-                        <label className="task-status-select">
-                          <span>Estado</span>
-                          <select
-                            value={task.status}
-                            onChange={(e) => handleStatusChange(task._id, e.target.value)}
-                          >
-                            <option value="pendiente">Por hacer</option>
-                            <option value="en curso">Haciendo</option>
-                            <option value="finalizada">Completada</option>
-                          </select>
-                        </label>
-                      </article>
-                    ))}
-                  </div>
+                      {/* Título y descripción */}
+                      <div className="task-info">
+                        <p className="task-name">{task.title}</p>
+                        {task.description && (
+                          <p className="task-description">{task.description}</p>
+                        )}
+                      </div>
+
+                      {/* Select de estado */}
+                      <select
+                        className={`task-status-badge badge-${task.status.replace(" ", "-")}`}
+                        value={task.status}
+                        onChange={(e) => handleStatusChange(task._id, e.target.value)}
+                      >
+                        <option value="pendiente">Por hacer</option>
+                        <option value="en curso">En curso</option>
+                        <option value="finalizada">Completada</option>
+                      </select>
+
+                      {/* Botones de acción */}
+                      <div className="task-actions">
+                        <Link
+                          to={`/edit-task/${task._id}`}
+                          className="task-icon-btn task-edit-btn"
+                          aria-label={`Editar ${task.title}`}
+                        >
+                          {/* Ícono lápiz */}
+                          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="15" height="15">
+                            <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        </Link>
+                        <button
+                          type="button"
+                          className="task-icon-btn task-delete-btn"
+                          onClick={() => handleDeleteTask(task._id)}
+                          aria-label={`Eliminar ${task.title}`}
+                        >
+                          {/* Ícono basura */}
+                          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="15" height="15">
+                            <path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M10 11v5M14 11v5" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  ))
                 )}
               </div>
             </>
