@@ -57,6 +57,36 @@ export async function createList(title, token) {
 }
 
 /**
+ * Update a list's title.
+ * @param {string} token - JWT token for authentication.
+ * @param {string} listId - The list identifier to update.
+ * @param {string} title - The new title for the list.
+ * @returns {Promise<Object>} API response JSON.
+ */
+export async function updateList(token, listId, title) {
+  try {
+    const response = await fetch(`${API_BASE_URL}/${listId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ title })
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(`Error ${response.status}: ${errorData.message || response.statusText}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Error updating list:', error);
+    throw error;
+  }
+}
+
+/**
  * Delete a list by its identifier.
  * @param {string} token - JWT token for authentication.
  * @param {string} listId - The list identifier to delete.

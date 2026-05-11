@@ -1,4 +1,4 @@
-/* ===== Wrapper ===== */
+
 .dashboard-wrapper {
   display: flex;
   justify-content: center;
@@ -21,7 +21,7 @@
   overflow: hidden;
 }
 
-/* SIDEBAR */
+
 .dashboard-lists-panel {
   background: #f7f3fb;
   border-right: 1px solid #ece5f6;
@@ -104,7 +104,36 @@
   text-overflow: ellipsis;
 }
 
-/* FIX: sin padding-top, centrado correcto */
+
+.lists-item-buttons {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+
+.lists-item-edit {
+  box-sizing: border-box;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #a090b8;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.18s ease;
+}
+
+.lists-item-edit:hover {
+  background: rgba(157, 127, 196, 0.1);
+  color: #7d5fa8;
+}
+
 .lists-item-delete {
   box-sizing: border-box;
   width: 28px;
@@ -157,7 +186,7 @@
   box-shadow: 0 8px 18px rgba(157, 127, 196, 0.28);
 }
 
-/* MAIN PANEL */
+
 .dashboard-main-panel {
   padding: 36px 42px;
   background: #ffffff;
@@ -184,7 +213,7 @@
 
 .header-subtitle { margin: 0; font-size: 14px; color: #707070; }
 
-/* PROGRESS */
+
 .progress-circle {
   width: 82px;
   height: 82px;
@@ -214,7 +243,7 @@
   transition: width 0.4s ease;
 }
 
-/* ACTIONS */
+
 .main-actions { display: flex; margin-top: -4px; }
 
 .dashboard-btn-secondary {
@@ -235,7 +264,7 @@
 
 .dashboard-btn-secondary:hover { background: rgba(157, 127, 196, 0.08); }
 
-/* TASKS */
+
 .tasks-list-container { 
   display: flex;
   flex-direction: column;
@@ -255,7 +284,7 @@
   border-radius: 12px;
   background: #ffffff;
   transition: all 0.2s ease;
-  align-self: stretch;   /* ← reemplaza width: 100% */
+  align-self: stretch;  
   box-sizing: border-box;
 }
 
@@ -329,7 +358,7 @@
 .badge-en-curso:hover   { background: #feecc9; border-color: #f39c12; }
 .badge-finalizada:hover { background: #d5f5e7; border-color: #27ae60; }
 
-/* FIX: iconos alineados verticalmente al centro */
+
 .task-actions {
   display: flex;
   align-items: center;
@@ -367,7 +396,7 @@
 .task-edit-btn:hover   { background: rgba(58, 47, 77, 0.08); color: #3a2f4d; }
 .task-delete-btn:hover { background: rgba(216, 39, 68, 0.1); color: #d82744; }
 
-/* EMPTY STATES */
+
 .empty-state,
 .no-selection {
   flex: 1;
@@ -411,10 +440,6 @@
   .progress-circle { width: 66px; height: 66px; }
   .progress-percent { font-size: 20px; }
 }
-
-/* =========================================================
-   MODAL DE CONFIRMACIÓN
-========================================================= */
 
 .modal-overlay {
   position: fixed;
@@ -539,5 +564,49 @@
 }
 
 .modal-btn-delete:active {
+  transform: translateY(0);
+}
+
+.modal-icon.edit-icon {
+  background: linear-gradient(135deg, #7d5fa8 0%, #5f3a82 100%);
+  box-shadow: 0 8px 24px rgba(125, 95, 168, 0.25);
+}
+
+
+.modal-form {
+  margin: 0 0 24px;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1a1a1a;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.modal-input:focus {
+  outline: none;
+  border-color: #7d5fa8;
+  background: rgba(157, 127, 196, 0.05);
+  box-shadow: 0 0 0 3px rgba(157, 127, 196, 0.1);
+}
+
+.modal-btn-save {
+  background: linear-gradient(135deg, #9d7fc4 0%, #7d5fa8 100%);
+  color: #ffffff;
+  box-shadow: 0 6px 20px rgba(157, 127, 196, 0.25);
+}
+
+.modal-btn-save:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(157, 127, 196, 0.35);
+}
+
+.modal-btn-save:active {
   transform: translateY(0);
 }

@@ -15,10 +15,10 @@ const ResetPassword = () => {
 
   const API_BASE = "https://lumo-back-1.onrender.com";
 
-  // 🔑 token desde URL
+  
   const token = searchParams.get("token");
 
-  // 🚫 bloquear si no hay token
+  
   useEffect(() => {
     if (!token) {
       setMessage("Enlace inválido o vencido.");
@@ -26,7 +26,7 @@ const ResetPassword = () => {
     }
   }, [token]);
 
-  // 🔐 validar contraseña
+  
   const validatePassword = (pw) => {
     const errors = [];
     if (pw.length < 8) errors.push("8 caracteres");
@@ -37,7 +37,7 @@ const ResetPassword = () => {
     return errors;
   };
 
-  // 🚀 submit
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 

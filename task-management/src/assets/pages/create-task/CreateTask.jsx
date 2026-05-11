@@ -100,7 +100,6 @@ const CreateTask = () => {
         </div>
 
         <form onSubmit={handleSubmit} className="create-task-form">
-          {/* Título */}
           <div className="form-group">
             <label htmlFor="title">Título *</label>
             <input
@@ -116,7 +115,6 @@ const CreateTask = () => {
             {errors.title && <span className="error-message">{errors.title}</span>}
           </div>
 
-          {/* Descripción */}
           <div className="form-group">
             <label htmlFor="description">Descripción</label>
             <textarea
@@ -128,7 +126,6 @@ const CreateTask = () => {
             />
           </div>
 
-          {/* Fecha Límite */}
           <div className="form-group">
             <label htmlFor="dueDate">Fecha Límite</label>
             <input
@@ -142,7 +139,6 @@ const CreateTask = () => {
             {errors.dueDate && <span className="error-message">{errors.dueDate}</span>}
           </div>
 
-          {/* Lista */}
           <div className="form-group">
             <label htmlFor="listId">Lista (Opcional)</label>
             <select
@@ -159,7 +155,6 @@ const CreateTask = () => {
             </select>
           </div>
 
-          {/* Estado */}
           <div className="form-group">
             <label htmlFor="status">Estado</label>
             <select
@@ -173,14 +168,12 @@ const CreateTask = () => {
             </select>
           </div>
 
-          {/* Errores */}
           {errors.submit && (
             <div className="alert alert-error">
               {errors.submit}
             </div>
           )}
 
-          {/* Botones */}
           <div className="form-actions">
             <button
               type="submit"

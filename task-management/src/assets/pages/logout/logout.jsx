@@ -7,10 +7,10 @@ const Logout = () => {
 
   useEffect(() => {
 
-    // 🧹 eliminar token
+    
     localStorage.removeItem("token");
 
-    // ⏳ esperar y redirigir
+    
     const timer = setTimeout(() => {
       navigate("/login", { replace: true });
     }, 800);

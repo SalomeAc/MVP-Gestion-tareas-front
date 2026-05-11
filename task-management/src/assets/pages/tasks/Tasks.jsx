@@ -78,7 +78,6 @@ const Tasks = () => {
 
   return (
     <div className="tasks-container">
-      {/* HEADER */}
       <div className="tasks-header">
         <div className="tasks-title">
           <h1> Mis Tareas</h1>
@@ -92,7 +91,6 @@ const Tasks = () => {
         </button>
       </div>
 
-      {/* ESTADÍSTICAS */}
       <div className="tasks-stats">
         <div className="stat-card">
           <div className="stat-content">
@@ -120,7 +118,6 @@ const Tasks = () => {
         </div>
       </div>
 
-      {/* FILTROS */}
       <div className="tasks-filters">
         {['all', 'pendiente', 'en curso', 'finalizada'].map((status) => (
           <button
@@ -133,7 +130,6 @@ const Tasks = () => {
         ))}
       </div>
 
-      {/* CONTENIDO */}
       {isLoading ? (
         <div className="tasks-loading">
           <div className="spinner"></div>
@@ -143,7 +139,6 @@ const Tasks = () => {
         <>
           {filteredTasks.length === 0 ? (
             <div className="tasks-empty">
-              <div className="empty-icon">📭</div>
               <h3>No hay tareas</h3>
               <p>
                 {filterStatus === "all"
@@ -201,7 +196,6 @@ const Tasks = () => {
         </>
       )}
 
-      {/* Modal de confirmación */}
       {modal.isOpen && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
