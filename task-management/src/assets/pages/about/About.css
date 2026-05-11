@@ -3,17 +3,18 @@
     padding: 0;
     box-sizing: border-box;
 }
+
 body {
-    background: #f3f5f7;
+    background: #f5f3f8;
     font-family: 'Segoe UI', Arial, sans-serif;
-    color: #555;
+    color: #5f5570;
 }
 
 .hero-subtitle {
     text-align: center;
     font-size: 1.4rem;
     font-weight: 600;
-    color: #555;
+    color: #5f5570;
     margin: 0 auto;
     max-width: 350px;
     line-height: 1.5;
@@ -25,46 +26,59 @@ body {
     align-items: center;
     justify-content: space-between;
     padding: 18px 3rem;
-    border-bottom: 2px solid #f7c873;
+    border-bottom: 2px solid #9d7fc4;
 }
+
 .logo a{
     font-size: 2rem;
-    color: orange;
+    color: #7d5fa8;
     font-weight: bold;
     text-decoration: none;
 }
+
 .links {
     display: flex;
     gap: 2rem;
     list-style: none;
 }
+
 .links a {
     text-decoration: none;
-    color: #333;
+    color: #5f5570;
     font-size: 1rem;
 }
+
 .login-btn a {
-    background: orange;
+    background: linear-gradient(135deg, #9d7fc4 0%, #7d5fa8 100%);
     color: #fff;
     padding: 10px 2rem;
-    border-radius: 4px;
+    border-radius: 8px;
     text-decoration: none;
     font-weight: 500;
     font-size: 1rem;
+    transition: transform 0.2s;
 }
+
+.login-btn a:hover {
+    transform: translateY(-2px);
+}
+
 main {
     padding: 0 0 2rem 0;
 }
+
 .hero {
     margin-top: 2.5rem;
     text-align: center;
 }
+
 .hero h1 {
     font-size: 3rem;
-    font-weight: 500;
-    color: #555;
+    font-weight: 600;
+    color: #5f5570;
     margin-bottom: 2.5rem;
 }
+
 .hero-content {
     display: flex;
     justify-content: center;
@@ -72,6 +86,7 @@ main {
     gap: 7rem;
     margin-bottom: 4rem;
 }
+
 .hero-img {
     background: none;
     min-width: 260px;
@@ -81,58 +96,80 @@ main {
     justify-content: center;
     font-weight: 600;
     font-size: 1rem;
-    color: #222;
+    color: #5f5570;
 }
+
 .hero-text {
     margin-top: 3.5rem;
     text-align: center;
 }
+
 .hero-text h2 {
     text-align: left;
     font-size: 2rem;
-    font-weight: bold;
-    color: #555;
+    font-weight: 600;
+    color: #5f5570;
     line-height: 2.3rem;
 }
+
 .why {
     margin-top: 2rem;
     text-align: center;
 }
 .why h2 {
     font-size: 2.5rem;
-    font-weight: 500;
-    color: #555;
+    font-weight: 600;
+    color: #5f5570;
     margin-bottom: 2.5rem;
 }
+
 .why .highlight {
-    color: orange;
-    font-weight: bold;
+    background: linear-gradient(135deg, #9d7fc4 0%, #7d5fa8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
 }
+
 .why-content {
     display: flex;
     justify-content: center;
     gap: 3rem;
     margin-bottom: 2rem;
+    flex-wrap: wrap;
 }
+
 .why-item {
     max-width: 260px;
     text-align: left;
+    padding: 1.5rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(125, 95, 168, 0.1);
+    border-left: 4px solid #9d7fc4;
 }
+
 .why-item strong {
     font-size: 1.3rem;
-    color: #444;
-    font-weight: bold;
+    color: #7d5fa8;
+    font-weight: 600;
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.8rem;
 }
+
 .why-item ul {
     margin-left: 1.2rem;
     font-size: 1rem;
-    color: #444;
+    color: #5f5570;
 }
+
+.why-item li {
+    margin-bottom: 0.5rem;
+}
+
 .author {
     margin-top: 1.5rem;
-    color: #444;
+    color: #5f5570;
     font-size: 1rem;
 }
 
@@ -142,8 +179,9 @@ main {
     margin-bottom: 0.5rem;
     color: #fff;
 }
+
 footer {
-    background-color: #152138;
+    background: linear-gradient(135deg, #3a2f4d 0%, #2a1f3d 100%);
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -162,7 +200,7 @@ footer {
 }
 
 .footer-col .logo {
-    color: orange;
+    color: #9d7fc4;
     font-size: 2rem;
     font-weight: bold;
     margin-bottom: 0.5rem;
@@ -171,7 +209,7 @@ footer {
 .footer-col p {
     margin-bottom: 0.5rem;
     font-size: 1.2rem;
-    color: #fff;
+    color: #e8dff5;
 }
 
 .footer-col ul {
@@ -181,9 +219,14 @@ footer {
 }
 
 .footer-col a {
-    color: #fff;
+    color: #e8dff5;
     text-decoration: none;
     font-size: 1.1rem;
+    transition: color 0.3s;
+}
+
+.footer-col a:hover {
+    color: #9d7fc4;
 }
 
 .footer-col .social {

@@ -2,7 +2,7 @@
  * Base API endpoint for task-related operations.
  * @type {string}
  */
-const TASKS_API_URL = "http://localhost:3000/api/tasks";
+const TASKS_API_URL = `${import.meta.env.VITE_API_URL}/api/tasks`;
 
 
 /**
@@ -40,6 +40,35 @@ export async function createTask(token, listId, taskData) {
 
 
 /**
+ * Retrieve all tasks for the authenticated user.
+ *
+ * @param {string} token - JWT token for authorization.
+ * @returns {Promise<Array>} Resolves with an array of task objects.
+ * @throws {Error} If the API responds with a non-OK status code.
+ */
+export async function getAllTasks(token) {
+  const response = await fetch(
+    `${import.meta.env.VITE_API_URL}/api/tasks`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      }
+    }
+  );
+
+  if (!response.ok) {
+    const text = await response.text();
+    console.error("Error getAllTasks:", text);
+    throw new Error(`Error ${response.status}`);
+  }
+
+  const data = await response.json();
+  return Array.isArray(data) ? data : (data.tasks ?? []);
+}
+
+/**
  * Retrieve all tasks for a given list.
  *
  * @param {string} token - JWT token for authorization.
@@ -49,7 +78,7 @@ export async function createTask(token, listId, taskData) {
  */
 export async function getTasks(token, listId) {
   const response = await fetch(
-    `http://localhost:3000/api/lists/get-tasks/${listId}`,
+    `${import.meta.env.VITE_API_URL}/api/lists/get-tasks/${listId}`,
     {
       method: "GET",
       headers: {

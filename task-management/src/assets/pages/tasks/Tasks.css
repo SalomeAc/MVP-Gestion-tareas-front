@@ -487,3 +487,133 @@
     font-size: 1.2rem;
   }
 }
+
+/* =========================================================
+   MODAL DE CONFIRMACIÓN
+========================================================= */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-content {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 40px 32px;
+  max-width: 420px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #9d7fc4 0%, #7d5fa8 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 8px 24px rgba(157, 127, 196, 0.25);
+}
+
+.modal-icon svg {
+  width: 36px;
+  height: 36px;
+}
+
+.modal-title {
+  margin: 0 0 12px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.modal-text {
+  margin: 0 0 32px;
+  font-size: 14px;
+  color: #707070;
+  line-height: 1.6;
+}
+
+.modal-text strong {
+  color: #d82744;
+  font-weight: 600;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.modal-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+  max-width: 160px;
+}
+
+.modal-btn-cancel {
+  background: #f0f0f0;
+  color: #666;
+  border: 1px solid #e0e0e0;
+}
+
+.modal-btn-cancel:hover {
+  background: #e8e8e8;
+  border-color: #d0d0d0;
+}
+
+.modal-btn-delete {
+  background: linear-gradient(135deg, #d82744 0%, #c41c3b 100%);
+  color: #ffffff;
+  box-shadow: 0 6px 20px rgba(216, 39, 68, 0.25);
+}
+
+.modal-btn-delete:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(216, 39, 68, 0.35);
+}
+
+.modal-btn-delete:active {
+  transform: translateY(0);
+}
