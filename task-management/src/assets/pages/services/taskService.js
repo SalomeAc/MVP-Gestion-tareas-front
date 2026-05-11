@@ -99,6 +99,32 @@ export async function getTasks(token, listId) {
 }
 
 /**
+ * Retrieve all tasks for the current user.
+ *
+ * @param {string} token - JWT token for authorization.
+ * @returns {Promise<Array>} Resolves with an array of task objects.
+ * @throws {Error} If the API responds with a non-OK status code.
+ */
+export async function getAllTasks(token) {
+  const response = await fetch(TASKS_API_URL, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`
+    }
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    console.error("Error getAllTasks:", text);
+    throw new Error(`Error ${response.status}`);
+  }
+
+  const data = await response.json();
+  return data.tasks ?? data;
+}
+
+/**
  * Update a task by its identifier.
  *
  * @param {string} token - JWT token for authorization.

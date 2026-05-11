@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { createTask } from "../services/taskService";
 import { getUserLists } from "../services/listServices";
 import "./CreateTask.css";
 
 const CreateTask = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const location = useLocation();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dueDate, setDueDate] = useState("");
@@ -18,6 +18,7 @@ const CreateTask = () => {
   const [lists, setLists] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const listId = new URLSearchParams(location.search).get("listId");
 
   // 🔐 Validación de token y cargar listas
   useEffect(() => {
@@ -70,13 +71,13 @@ const CreateTask = () => {
     setErrors({});
 
     try {
-      await createTask(token, listId || null, {
+      await createTask(token, listId, {
         title: title.trim(),
         description: description.trim(),
         dueDate: dueDate || null,
         status,
       });
-      navigate("/tasks");
+      navigate(listId ? "/dashboard" : "/tasks");
     } catch (err) {
       setErrors({ submit: "Error creando la tarea. Inténtalo de nuevo." });
       console.error(err);

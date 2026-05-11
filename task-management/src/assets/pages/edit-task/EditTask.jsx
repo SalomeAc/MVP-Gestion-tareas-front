@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { updateTask, getAllTasks } from "../services/taskService";
 import "./EditTask.css";
 
 const EditTask = () => {
-  const navigate = useNavigate();
-  const { id: taskId } = useParams();
-  
+  const location = useLocation();
+
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -18,10 +17,20 @@ const EditTask = () => {
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const token = localStorage.getItem("token");
+  const taskId = new URLSearchParams(location.search).get("id");
+
+  // 🔐 validaciones iniciales
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) {
-      navigate("/login", { replace: true });
+      window.location.href = "/login/";
+      return;
+    }
+
+    if (!taskId) {
+      alert("Error: tarea o lista no encontrada");
+      window.location.href = "/dashboard/";
       return;
     }
 
@@ -30,14 +39,9 @@ const EditTask = () => {
 
   const loadData = async (token) => {
     try {
-      setLoading(true);
-      
-      // Obtener todas las tareas del usuario
-      const allTasks = await getAllTasks(token);
-      
-      // Buscar la tarea específica por ID
-      const task = allTasks.find(t => (t._id || t.id) === taskId);
-      
+      const tasks = await getAllTasks(token);
+      const task = tasks.find(t => (t._id || t.id) === taskId);
+
       if (!task) {
         console.error("Tarea no encontrada. ID buscado:", taskId);
         console.error("Tareas disponibles:", allTasks);
@@ -90,9 +94,9 @@ const EditTask = () => {
         status: form.status
       };
 
-      if (form.dueDate) {
-        taskData.dueDate = `${form.dueDate}T12:00:00.000Z`;
-      }
+      alert("Tarea actualizada ✅");
+
+      window.location.href = "/dashboard/";
 
       await updateTask(token, taskId, taskData);
       navigate("/tasks", { replace: true });
