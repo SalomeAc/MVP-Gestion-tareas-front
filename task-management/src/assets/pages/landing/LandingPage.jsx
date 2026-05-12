@@ -31,7 +31,7 @@ export default function LandingPage() {
     <div className="mobile-wrapper">
       <div className="mobile-card">
             <img
-                src="./public/favicon.svg"
+                src="/favicon.svg"
                 alt="Task Manager Illustration"
                 className="landing-image"
             />
