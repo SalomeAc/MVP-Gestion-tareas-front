@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { getUserLists } from "../services/listService";
-import { getUserProfile } from "../services/userServices";
+import { getUserLists } from "../pages/services/listServices";
+import { getUserProfile } from "../pages/services/userServices";
 import { useNavigate } from "react-router-dom";
 import "./Sidebar.css";
 
